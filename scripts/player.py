@@ -1,11 +1,10 @@
+from scripts.structures import Hand
+
 class Player:
 
     def __init__(self, nome):
 
         self.nome = nome
-        self.bones = []
+        self.hand = Hand()
+        self.next = None
 
-
-    def display(self):
-
-        return ' '.join(str(self.bones))

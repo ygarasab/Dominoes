@@ -7,10 +7,9 @@ class Domino:
         self.prev = None
         self.next = None
 
-        self.free = None
+        self.value = "{}:{}".format(*self.sides)
 
-        self.site = 'Pile'
 
     def __repr__(self):
 
-        return "{}:{}".format(*self.sides)
+        return self.value
