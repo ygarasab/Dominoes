@@ -2,6 +2,12 @@ class Domino:
 
     def __init__(self, a, b):
 
+        """
+        Estrutura básica de manipulação
+        :param int a:
+        :param int b:
+        """
+
         self.sides = [a, b]
 
         self.prev = None
@@ -13,3 +19,4 @@ class Domino:
     def __repr__(self):
 
         return self.value
+

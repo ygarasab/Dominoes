@@ -4,10 +4,21 @@ from scripts.structures import Pile, Table
 
 class Game:
 
+    """
+        Estrutura básica do jogo de Dominó
+    """
+
     def __init__(self, players):
+
+        """
+        Inicialização dos players e suas peças
+
+        :param list players:
+        """
 
         self.dominoes = []
         self.players = players
+
 
         for i in range(7):
 
@@ -24,6 +35,10 @@ class Game:
 
 
     def distribute(self):
+
+        """
+        Distribui os dominós entre os players
+        """
 
         copy = self.dominoes[:]
 
@@ -48,6 +63,10 @@ class Game:
 
     def start(self):
 
+        """
+        Seleciona o player com o maior 'carrão' para começar
+        """
+
         for i in range(0,7)[::-1]:
 
 
@@ -62,6 +81,13 @@ class Game:
                     return player.next
 
     def play(self, domino, place):
+
+        """
+        Realiza (ou tenta realizar) uma jogada
+        :param str domino:
+        :param str place:
+        
+        """
 
         if self.player.hand.check(domino):
 
@@ -93,4 +119,7 @@ class Game:
 
         return 0
 
+
+x = Game([])
+k =x.play('sw','fddf')
 

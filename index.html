@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Testes de posicionamento</title>
+    </head>
+    <script>
+        var dominoes = []
+        function new_dom(){
+            
+            var domino = document.createElement('img')
+            domino.src = "sprites/"+Number(dominoes.length+1)+".png"
+
+            domino.style.transform = 'rotate(90deg)'
+
+            var l = 190*dominoes.length
+
+            domino.style.position = 'absolute';
+            domino.style.width = '100px';
+            domino.style.top = (window.innerHeight-150)/2 + 'px'
+            domino.style.left = (window.innerWidth-150)/2 + l + 'px'
+
+            document.body.appendChild(domino)
+
+            dominoes.push(domino)
+
+        }
+    </script>
+    <body>
+        <button onclick="new_dom()">Click me</button>
+    </body>
+</html>
