@@ -1,0 +1,23 @@
+{
+  "name": "dominoes",
+  "version": "1.0.0",
+  "description": "Domino game for academic task",
+  "main": "start.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tubskleyson/Dominoes.git"
+  },
+  "author": "Tubs",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tubskleyson/Dominoes/issues"
+  },
+  "homepage": "https://github.com/Tubskleyson/Dominoes#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.2.0"
+  }
+}
