@@ -1,0 +1,27 @@
+body{
+    background-image: url(../textures/wood.jpg);
+    background-size: 300px;
+}
+
+.hand{
+    background-image: url(../textures/planks.jpg);
+    border-radius: 10px 10px 0 0;
+    display: block;
+    width: 80%;
+    height: 80px;
+    position: fixed;
+    bottom: 0;
+    margin-left: 10%;
+}
+
+.bones{
+    display: block;
+    width: 85%;
+    height: 120px;
+    margin: -55px auto 0 auto;
+}
+
+.hand-bone{
+    width: 60px;
+    
+}
