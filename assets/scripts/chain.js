@@ -22,9 +22,9 @@ class GraphicDomino{
 
                 this.horizontal = parent.horizontal
                 this.rotation = parent.rotation
+                
                 if(!parent.horizontal){
-    
-                    this.top = parent.top - parent.heading * 140
+                    this.top = parent.top + parent.heading * 135
                     this.left = parent.left
                 }
                 else{
@@ -33,24 +33,28 @@ class GraphicDomino{
                 }
             }
 
-            else if(rotation > 0){
+            else{
+                this.heading = rotation*parent.heading
+                if(!parent.horizontal) this.heading = -this.heading 
+                
+                this.horizontal = !parent.horizontal
 
-                this.heading
-
-                this.rotation = parent.rotation - 90
                 if(!parent.horizontal){
-                    this.top = parent.top - 35
+                    this.top = parent.top + parent.heading * 35
+                    this.left = parent.left - rotation * parent.heading * 100
                 }
-                else this.top = parent.top + 35
-                this.left = parent.left + direction * 100
+                else{
+        
+                    this.top = parent.top + rotation * parent.heading * 35
+                    this.left = parent.left + parent.heading * 100
+                }
+
+                this.rotation = parent.rotation + rotation * 90
+
             }
 
-            else if(rotation < 0){
-                this.rotation = parent.rotation - 90
-                this.top = parent.top - 35
-                if(!parent.horizontal) direction = -direction
-                this.left = parent.left + direction * 100
-            }
+
+            console.log(this)
 
         }
 
