@@ -38,6 +38,8 @@ class Board{
         this.bone_set.push(bone_image)
         this.bones.appendChild(bone_image)
 
+        this.bones.style.width = 70*this.bone_set.length+'px'
+
     }
 
 }

@@ -5,20 +5,25 @@ body{
 
 .hand{
     background-image: url(../textures/planks.jpg);
+    background-position: bottom;
+    background-size: 50px 100px;
+    background-repeat: repeat-x;
     border-radius: 10px 10px 0 0;
     display: block;
     width: 80%;
-    height: 80px;
+    height: 150px;
+    padding: 0 20px 0 20px;
     position: fixed;
     bottom: 0;
     margin-left: 10%;
+    overflow-x: scroll;
+    
 }
 
 .bones{
     display: block;
-    width: 85%;
     height: 120px;
-    margin: -55px auto 0 auto;
+    margin: 5px auto 0 auto;
 }
 
 .hand-bone{
