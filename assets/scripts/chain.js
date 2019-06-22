@@ -53,8 +53,14 @@ class GraphicDomino{
 
             }
 
+            var aux = this.heading+1
 
-            console.log(this)
+            if(this.horizontal) 
+                this.edge = [[this.top + 35, this.left + aux * 70],
+                             [this.top + 105, this.left + aux * 70]]
+            else
+                this.edge = [[this.top + aux * 35, this.left],
+                             [this.top + aux * 35, this.left + 70]]
 
         }
 
@@ -66,6 +72,9 @@ class GraphicDomino{
             this.rotation = 90
             this.top = wh-100
             this.left = ww-30
+
+            this.edge = [[[this.top + 35,this.left],[this.top+105,this.left]],
+                         [[this.top + 35,this.left+140],[this.top+105, this.left+140]]]
 
             this.horizontal = 1
 
@@ -115,7 +124,7 @@ class Chain{
         
     }
 
-    add_right(value, rotation){
+    add_head(value, rotation){
 
         var parent = this.tail
 
@@ -126,7 +135,7 @@ class Chain{
 
     }
 
-    add_left(value, rotation){
+    add_tail(value, rotation){
 
         var parent = this.head
 

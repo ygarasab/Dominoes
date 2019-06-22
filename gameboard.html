@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ondragover="event.preventDefault()">
     <head>
         <meta charset="utf-8">
         <title>Bord</title>
@@ -7,9 +7,8 @@
     </head>
     <script src="assets/scripts/chain.js"></script>
     <script src="assets/scripts/board.js"></script>
-    
-    <body>
-        
+    <body >
+                
     </body>
 
     <script>
@@ -24,13 +23,16 @@
         var chain = new Chain()
 
         chain.add_root('66')
-        chain.add_right('56',0)
-        chain.add_right('36',0)
-        chain.add_right('03',1)
         
-        chain.add_left('35',0)
-        chain.add_left('15',1)
-        chain.add_left('24',0)
-        chain.add_left('35',-1)
+
+        console.log(chain.head, chain.tail)
+
+        document.documentElement.ondrop = (e) => {
+            
+            e.preventDefault();
+            var value = e.dataTransfer.getData("text");
+            console.log(value, e.clientX, e.clientY);
+            
+        }
     </script>
 </html>

@@ -1,3 +1,62 @@
+class HandDomino{
+
+    /**
+     * 
+     * @param {String} bone Valor do dominó
+     * @param {HTMLDivElement} containner Div que representa a mão
+     * @returns {HandDomino}
+     */
+
+    constructor(bone, containner){
+
+        this.draggin = false
+
+        this.img = document.createElement('img')
+        this.img.className = 'hand-bone'
+        this.img.id = bone
+        this.img.src = 'assets/sprites/'+bone+'.png'
+        this.img.obj = this
+        this.img.draggable = true
+        this.img.ondragstart = (e) => this.drag(e)
+        
+
+        this.containner = containner
+        this.containner.appendChild(this.img)
+
+
+
+    }
+
+    /**
+     * 
+     * @param {DragEvent} event 
+     */
+
+    drag(event){
+
+        event.dataTransfer.setData('text',event.target.id)
+
+    }
+
+    /**
+     * 
+     * @param {MouseEvent} event 
+     */
+
+    drop(event){
+
+        if(!this.draggin) return
+
+        this.draggin = false
+
+        this.img.style.display = 'inline-block'
+
+        document.body.removeChild(this.draggable)
+
+    }
+
+}
+
 class Board{
 
 
@@ -31,12 +90,9 @@ class Board{
      */
     addToHand(bone){
 
-        var bone_image = document.createElement('img')
-        bone_image.className = 'hand-bone'
-        bone_image.src = 'assets/sprites/'+bone+'.png'
+        var handbone = new HandDomino(bone, this.bones)    
 
-        this.bone_set.push(bone_image)
-        this.bones.appendChild(bone_image)
+        this.bone_set.push(handbone)
 
         this.bones.style.width = 70*this.bone_set.length+'px'
 
