@@ -59,8 +59,12 @@ class HandDomino{
 
 class Board{
 
+    /**
+     * 
+     * @param {String[]} dominoes 
+     */
 
-    constructor(){
+    constructor(dominoes){
 
         this.hand = document.createElement('div')
         this.hand.className = 'hand'
@@ -73,6 +77,8 @@ class Board{
         this.bone_set = []
 
         this.display()
+
+        for(let i of dominoes) this.addToHand(i)
 
     }
 

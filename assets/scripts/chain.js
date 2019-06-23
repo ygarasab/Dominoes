@@ -6,10 +6,13 @@ class GraphicDomino{
      * @param {Number} direction Sentido deste dominó na corrente
      * @param {Number} rotation Define a rotação do dominó em relação ao parent
      */
-    constructor(value,parent, direction, rotation){
+    constructor(value,parent, direction, rotation, match){
 
         this.img = document.createElement('img')
         this.img.src = 'assets/sprites/'+value+'.png'
+
+        console.log(match);
+        
 
         if(parent){
 
@@ -21,15 +24,15 @@ class GraphicDomino{
                 else this.heading = direction
 
                 this.horizontal = parent.horizontal
-                this.rotation = parent.rotation
+                this.rotation = match * direction * parent.rotation
                 
                 if(!parent.horizontal){
-                    this.top = parent.top + parent.heading * 135
+                    this.top = parent.top + this.heading * 135
                     this.left = parent.left
                 }
                 else{
                     this.top = parent.top
-                    this.left = parent.left + direction * 135
+                    this.left = parent.left + this.heading * 135
                 }
             }
 
@@ -56,8 +59,8 @@ class GraphicDomino{
             var aux = this.heading+1
 
             if(this.horizontal) 
-                this.edge = [[this.top + 35, this.left + aux * 70],
-                             [this.top + 105, this.left + aux * 70]]
+                this.edge = [[this.top + 35, this.left + aux * 55],
+                             [this.top + 105, this.left + aux * 55]]
             else
                 this.edge = [[this.top + aux * 35, this.left],
                              [this.top + aux * 35, this.left + 70]]
@@ -73,8 +76,8 @@ class GraphicDomino{
             this.top = wh-100
             this.left = ww-30
 
-            this.edge = [[[this.top + 35,this.left],[this.top+105,this.left]],
-                         [[this.top + 35,this.left+140],[this.top+105, this.left+140]]]
+            this.edge = [[[this.top + 35,this.left-35],[this.top+105,this.left-35]],
+                         [[this.top + 35,this.left+105],[this.top+105, this.left+105]]]
 
             this.horizontal = 1
 
@@ -87,6 +90,9 @@ class GraphicDomino{
     }
 
     display(){
+
+        console.log(this);
+        
 
         var s = this.img.style
         s.position = 'absolute'
@@ -105,44 +111,88 @@ class GraphicDomino{
 
 class Chain{
 
-    constructor(){
+    /**
+     * 
+     * @param {String} root 
+     */
+
+    constructor(root){
         this.head = null
         this.tail = null
+
+        this.addRoot(root)
     }
 
     /**
      * 
-     * @param {HTMLImageElement} domino 
+     * @param {String} domino 
      */
-    add_root(value){
+    addRoot(value){
 
         var domino = new GraphicDomino(value,0,0,0)
 
         this.head = domino
         this.tail = domino
 
+        this.iHead = {
+            horizontal : domino.horizontal,
+            heading : -1,
+            edge : domino.edge[0]
+        }
+
+        this.iTail = {
+            horizontal : domino.horizontal,
+            heading : 1,
+            edge : domino.edge[1]
+        }
+
         
     }
+    
+    /**
+     * 
+     * @param {String} value 
+     * @param {Number} rotation 
+     */
 
-    add_head(value, rotation){
+    addTail(value, rotation, match){
 
         var parent = this.tail
 
-        var domino = new GraphicDomino(value,parent,1,rotation)
+        var domino = new GraphicDomino(value,parent,1,rotation, match)
 
         parent.next = domino
         this.tail = domino
 
+        this.iTail = {
+            horizontal : domino.horizontal,
+            heading : domino.heading,
+            edge : domino.edge
+        }
+        
+
     }
 
-    add_tail(value, rotation){
+    /**
+     * 
+     * @param {String} value 
+     * @param {Number} rotation 
+     */    
+
+    addHead(value, rotation, match){
 
         var parent = this.head
 
-        var domino = new GraphicDomino(value,parent,-1,rotation)
+        var domino = new GraphicDomino(value,parent,-1,rotation, match)
 
         domino.next = parent
         this.head = domino
+
+        this.iHead = {
+            horizontal : domino.horizontal,
+            heading : domino.heading,
+            edge : domino.edge
+        }
 
     }
 

@@ -6,6 +6,11 @@ class Hand{
 
     }
 
+    /**
+     * 
+     * @param {Domino} domino 
+     */
+
     add(domino){
 
         if( !this.root ) this.root = domino
@@ -34,6 +39,11 @@ class Hand{
 
     }
 
+    /**
+     * 
+     * @param {String} value 
+     */
+
     check(value){
 
         var domino = this.root
@@ -48,6 +58,11 @@ class Hand{
         return 0
 
     }
+
+    /**
+     * 
+     * @param {String} value 
+     */
 
     get(value){
 
@@ -86,16 +101,21 @@ class Hand{
     
     }
 
+    /**
+     * @returns {String[]}
+     */
+
     toArray(){
         var array = []
         var domino = this.root
         while(domino){
-            array.push(domino)
+            array.push(domino.value)
             domino = domino.next
         }
 
         return array
     }
+
 
 }
 
@@ -105,7 +125,7 @@ class Pile{
 
         this.top = null
 
-        for(domino of set) this.add(domino)
+        for(let domino of set) this.add(domino)
 
     }
 
@@ -146,10 +166,14 @@ class Table{
     }
 
     add_head(domino){
+
+        
+        
         
         for (let i of domino.sides){
             
-            if(i==self.head){
+            if(i==this.head){
+
 
                 this.first.prev = domino
                 domino.next = this.first

@@ -5,34 +5,26 @@
         <title>Bord</title>
         <link rel="stylesheet" href="assets/estilo/board.css">
     </head>
+    <script src="assets/scripts/engine/domino.js"></script>
+    <script src="assets/scripts/engine/player.js"></script>
+    <script src="assets/scripts/engine/game.js"></script>
+    <script src="assets/scripts/engine/structures.js"></script>
     <script src="assets/scripts/chain.js"></script>
     <script src="assets/scripts/board.js"></script>
+    <script src="assets/scripts/controller.js"></script>
     <body >
                 
     </body>
 
     <script>
 
-        var board = new Board()
+        let id = 0
 
-            board.addToHand('11')
-            board.addToHand('26')
-            board.addToHand('34')
-            board.addToHand('03')       
-        
-        var chain = new Chain()
+        var dudu = new Player("Dudu",0)
+        var dede = new Player("Dedé",1)
 
-        chain.add_root('66')
-        
+        var players = [dudu, dede]
 
-        console.log(chain.head, chain.tail)
-
-        document.documentElement.ondrop = (e) => {
-            
-            e.preventDefault();
-            var value = e.dataTransfer.getData("text");
-            console.log(value, e.clientX, e.clientY);
-            
-        }
+        var game = new Controller(players, id)
     </script>
 </html>
