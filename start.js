@@ -70,6 +70,16 @@ app = express()
 
     })
 
+    .get('/salas', (req,res) => {
+
+        let username = req.session.username
+
+        if(!username) res.redirect('/username')
+
+        else res.render('salas', {salas : salas})
+
+    })
+
 server = app.listen(port, () => console.log(`[ node ]  Ouvindo à porta ${ port }`))
 
 var io = socket(server)
@@ -84,7 +94,7 @@ var io = socket(server)
             var sala = data.sala
             let nome = data.nome
 
-            sala = {nome : sala, dono : nome}
+            sala = {nome : sala, dono : nome, membros = [nome]}
 
             
 
@@ -94,9 +104,23 @@ var io = socket(server)
             }
 
             sala = salas.filter((value) => {return value.nome == sala.nome})[0]
+            socket.join(sala)
+            
+            if(!sala.membros.includes(nome)) sala.membros.push(nome)
 
             if(sala.dono == nome) socket.emit('dono')
 
         })
 
+        .on('looking', () => {
+
+            socket.join('salas')
+
+        })
+
     })
+
+setInterval(()=>{
+    io.to('salas').emit('salas', salas)
+    for(let sala of salas) io.to(sala.nome).emit(sala)
+}, 1000)
