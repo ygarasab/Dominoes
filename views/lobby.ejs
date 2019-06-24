@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title><%= sala %></title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+</head>
+<body>
+    <h2>Sua sala está aberta, aqui estão presentes:</h2>
+
+    <div id="presentes"></div>
+
+</body>
+<script>
+
+    var username = '<%= username %>'
+    var sala = '<%= sala %>'
+
+    var players = [username]
+
+    var presentes = document.getElementById('presentes')
+
+    presentes.innerHTML = ''
+
+    for(let i of players) presentes.innerHTML += `<p>${ i } </p>`
+
+    var socket = io.connect()
+
+    .on('dono', () => console.log('god'))
+
+
+    socket.emit('sala',{nome : username, sala : sala })
+
+</script>
+</html>
