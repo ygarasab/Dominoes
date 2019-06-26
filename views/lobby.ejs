@@ -4,16 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="/estilo/main.css">
+    <link rel="stylesheet" href="/estilo/lobby.css">
     <title><%= sala %></title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
 </head>
 <body>
-    <h2>Sua sala está aberta, aqui estão presentes:</h2>
+    <h2>Esperando Jogdores</h2>
 
     <div id="presentes"></div>
 
 </body>
 <script>
+
+    var go
+    var gone = false
 
     var username = '<%= username %>'
     var sala = '<%= sala %>'
@@ -22,16 +28,56 @@
 
     var presentes = document.getElementById('presentes')
 
+    
+
+
     presentes.innerHTML = ''
 
-    for(let i of players) presentes.innerHTML += `<p>${ i } </p>`
+    for(let i of players) presentes.innerHTML += `<span class='player'><i class="fas fa-mouse-pointer"></i><br>${ i } </span>`
 
     var socket = io.connect()
 
     .on('dono', () => console.log('god'))
 
+    .on('status', (data) => {
+        
+        if(data.membros != players){
+            
+            players = data.membros
+            presentes.innerHTML = ''
+
+            for(let i of players) 
+                presentes.innerHTML += `<span class='player'><i class="fas fa-mouse-pointer"></i><br>${ i } </span>`
+            
+
+            if(players.length > 1 && data.dono == username){
+
+                if(!gone)
+                    document.body.appendChild(go)
+                
+                gone = true
+                
+            }
+            else if(gone){
+                document.body.removeChild(go)
+                gone = false
+            }
+        }
+
+    })
+
 
     socket.emit('sala',{nome : username, sala : sala })
+
+    go = document.createElement('button')
+    go.className = 'go'
+    go.onclick = () => {
+
+        socket.emit('go', sala)
+
+    }
+
+    go.innerHTML = '<i class="far fa-play-circle"></i>'
 
 </script>
 </html>

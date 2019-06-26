@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+    <link rel="stylesheet" href="estilo/main.css">
+    <link rel="stylesheet" href="estilo/index.css">
     <title>Dominoes</title>
 </head>
 <body>
@@ -31,7 +33,7 @@
 
                 for(let sala of salas) {
                     
-                    containner.innerHTML += `<p> ${ sala.nome } </p><button onclick='window.location.href = "/lobby/${ sala.nome }"'>Join</button>`
+                    containner.innerHTML += `<button onclick='window.location.href = "/lobby/${ sala.nome }"'>${ sala.nome }</button>`
                     
                 }
 
