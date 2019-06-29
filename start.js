@@ -70,6 +70,16 @@ app = express()
 
     })
 
+    .get('/game/:nome', (req, res) => {
+
+        let username = req.session.username
+
+        if(!username) res.redirect('/username')
+
+        else res.render('gameboard', {username : username, sala : req.params.nome})
+
+    })
+
     .get('/salas', (req,res) => {
 
         let username = req.session.username
@@ -94,7 +104,7 @@ var io = socket(server)
             var sala = data.sala
             let nome = data.nome
 
-            sala = {nome : sala, dono : nome, membros : [nome]}
+            sala = {nome : sala, dono : nome, membros : [nome], ingame : false}
 
             
 
@@ -118,6 +128,15 @@ var io = socket(server)
 
             socket.join('salas')
 
+        })
+
+        .on('go', (nome) => {
+
+            sala = salas.filter((value) => {return value.nome == nome})[0]
+            sala.ingame = true
+
+            io.to(nome).emit('go', nome)
+        
         })
 
     })

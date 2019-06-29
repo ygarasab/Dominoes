@@ -66,6 +66,8 @@
 
     })
 
+    .on('go', (sala) => window.location.href = '/game/'+sala )
+
 
     socket.emit('sala',{nome : username, sala : sala })
 

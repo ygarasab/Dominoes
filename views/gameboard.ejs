@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html ondragover="event.preventDefault()">
+    <head>
+        <meta charset="utf-8">
+        <title>Bord</title>
+        <link rel="stylesheet" href="/estilo/board.css">
+    </head>
+    <script src="/scripts/engine/domino.js"></script>
+    <script src="/scripts/engine/player.js"></script>
+    <script src="/scripts/engine/game.js"></script>
+    <script src="/scripts/engine/structures.js"></script>
+    <script src="/scripts/chain.js"></script>
+    <script src="/scripts/board.js"></script>
+    <script src="/scripts/controller.js"></script>
+    <body >
+                
+    </body>
+
+    <script>
+
+        let id = 0
+
+        var dudu = new Player("Dudu",0)
+        var dede = new Player("Dedé",1)
+
+        var players = [dudu, dede]
+
+        var game = new Controller(players, id)
+    </script>
+</html>

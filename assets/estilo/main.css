@@ -11,3 +11,11 @@ h1{
     font-size: 50pt;
     font-weight: lighter;
 }
+
+button:hover{
+    cursor: pointer;
+}
+
+button:focus{
+    outline: none;
+}
