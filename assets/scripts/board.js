@@ -14,7 +14,7 @@ class HandDomino{
         this.img = document.createElement('img')
         this.img.className = 'hand-bone'
         this.img.id = bone
-        this.img.src = 'assets/sprites/'+bone+'.png'
+        this.img.src = '/sprites/'+bone+'.png'
         this.img.obj = this
         this.img.draggable = true
         this.img.ondragstart = (e) => this.drag(e)

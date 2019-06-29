@@ -6,7 +6,9 @@ class Controller{
      * @param {Number} me 
      */
 
-    constructor(players, me){
+    constructor(socket,players, me, hands, pile){
+
+        this.socket = socket
 
         this.players = players
 
@@ -23,7 +25,31 @@ class Controller{
 
         this.me = this.players[me]
 
-        this.game = new Game(players)
+        this.id = me
+
+        if(!me){
+            this.game = new Game(players)
+            
+            let pile = this.game.pile.toArray()
+
+            let hands = []
+
+            for(let player of players){
+
+                let hand = player.hand.toArray()
+                if(hand.length<7) hand.push(this.game.table.first.value)
+                
+                hands.push(hand)
+                
+            }
+
+            console.log([sala,hands, pile]);
+            
+
+            setTimeout(() => socket.emit('start', [sala.nome, hands, pile]), 500)
+        }
+
+        else this.game = new Game(players, hands, pile)
 
         this.board = new Board(this.me.hand.toArray())
 
@@ -59,7 +85,18 @@ class Controller{
                 play = this.game.play(value, 0)
                 
 
-                if(play) return this.chain.addHead(value, rotation, match)
+                if(play){
+
+                    this.socket.emit('play', [this.socket.sala.nome,{
+                        player : this.id,
+                        ponta : 0,
+                        valor : value,
+                        rotation : rotation,
+                        match : match
+                    }])
+
+                    return this.chain.addHead(value, rotation, match)
+                }
             }
 
             rotation = this.placeCheck(this.chain.iTail, event.clientX, event.clientY)
@@ -69,7 +106,19 @@ class Controller{
                 
                 play = this.game.play(value, 1)
 
-                if(play) return this.chain.addTail(value, rotation, match)
+                if(play){
+
+                    console.log(this.socket.sala);
+                    
+                    this.socket.emit('play', [this.socket.sala.nome,{
+                        player : this.id,
+                        ponta : 1,
+                        valor : value,
+                        rotation : rotation,
+                        match : match
+                    }])
+                    return this.chain.addTail(value, rotation, match)
+                }
             }
         }
 

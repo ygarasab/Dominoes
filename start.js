@@ -132,11 +132,49 @@ var io = socket(server)
 
         .on('go', (nome) => {
 
-            sala = salas.filter((value) => {return value.nome == nome})[0]
+            var sala = salas.filter((value) => {return value.nome == nome})[0]
             sala.ingame = true
 
             io.to(nome).emit('go', nome)
         
+        })
+
+        .on('info', (data) => {
+
+            var sala = salas.filter((value) => {return value.nome == data[0]})[0]
+            console.log(data[1]+" pedindo informação");
+
+            socket.join(data[0])
+
+            console.log(data[1]+' está em '+socket.rooms);
+            
+            
+            if(sala.dono == data[1]) socket.emit('info', sala)
+
+        })
+
+        .on('start', (data) => {
+            console.log('starting', data);
+            
+            var sala = salas.filter((value) => {return value.nome == data[0]})[0]
+            sala.gamestate = [0]
+            io.to(data[0]).emit('start', [sala,data[1], data[2]] )
+
+        })
+
+        .on('play', (data) => {
+
+            console.log(data[0]);
+            
+
+            var sala = salas.filter((value) => {return value.nome == data[0]})[0]
+
+            let play = data[1]
+            sala.gamestate.push(play)
+
+            console.log(play.player+" acabou de jogar");
+            
+
         })
 
     })

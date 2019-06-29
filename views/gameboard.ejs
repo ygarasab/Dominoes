@@ -5,6 +5,7 @@
         <title>Bord</title>
         <link rel="stylesheet" href="/estilo/board.css">
     </head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
     <script src="/scripts/engine/domino.js"></script>
     <script src="/scripts/engine/player.js"></script>
     <script src="/scripts/engine/game.js"></script>
@@ -18,13 +19,87 @@
 
     <script>
 
-        let id = 0
+        var username = '<%= username %>'
+        var sala = '<%= sala %>'
 
-        var dudu = new Player("Dudu",0)
-        var dede = new Player("Dedé",1)
+        var gamestate = [0]
 
-        var players = [dudu, dede]
+        var owner = 0
 
-        var game = new Controller(players, id)
+        var socket = io.connect()
+
+        var game
+
+        function start() {
+
+            var players = []
+
+            for(let player of sala.membros) 
+                players.push(new Player(player, sala.membros.indexOf(player)))
+
+            game = new Controller(socket,players, sala.membros.indexOf(username))
+            
+        }
+
+        socket
+
+        .on('info', (info) => {
+
+            owner = 1
+            sala = info
+            socket.sala = sala
+            start()
+
+        })
+
+        .on('start', (info) => {
+
+            console.log(owner);
+            
+
+            if(!owner){
+
+                sala = info[0]
+                let hands = info[1]
+                let pile = info[2]
+
+                var players = []
+
+                for(let player of sala.membros) 
+                    players.push(new Player(player, sala.membros.indexOf(player)))
+
+                socket.sala = sala
+                game = new Controller(socket,players, sala.membros.indexOf(username), hands, pile)
+
+
+
+            }
+
+        })
+
+        .on('status', (sala)=>{
+
+            if(sala.gamestate!=undefined && sala.gamestate.length > gamestate.length){
+                let play = sala.gamestate[gamestate.length]
+                gamestate = sala.gamestate
+
+
+                game.game.play(play.valor, play.ponta)
+                
+                if(!play.ponta) 
+                    game.chain.addHead(play.valor, play.rotation, play.match)
+                else 
+                    game.chain.addTail(play.valor, play.rotation, play.match)
+                
+            };
+            
+
+        })
+
+        socket.emit('info', [sala, username])
+        
+        //var players = [dudu, dede]
+
+        //var game = new Controller(players, id)
     </script>
 </html>

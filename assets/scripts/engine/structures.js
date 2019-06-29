@@ -153,6 +153,17 @@ class Pile{
 
     }
 
+    toArray(){
+        var array = []
+        var domino = this.top
+        while(domino){
+            array.push(domino.value)
+            domino = domino.next
+        }
+
+        return array
+    }
+
 }
 class Table{
 

@@ -9,7 +9,7 @@ class GraphicDomino{
     constructor(value,parent, direction, rotation, match){
 
         this.img = document.createElement('img')
-        this.img.src = 'assets/sprites/'+value+'.png'
+        this.img.src = '/sprites/'+value+'.png'
 
         console.log(match);
         
@@ -157,6 +157,9 @@ class Chain{
 
     addTail(value, rotation, match){
 
+        
+        
+
         var parent = this.tail
 
         var domino = new GraphicDomino(value,parent,1,rotation, match)
@@ -180,6 +183,8 @@ class Chain{
      */    
 
     addHead(value, rotation, match){
+
+        console.log(this.head, value, rotation, match);
 
         var parent = this.head
 

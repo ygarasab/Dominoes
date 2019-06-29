@@ -1,10 +1,33 @@
 class Game{
 
-    constructor(players){
+    constructor(players, hands, pile){
 
         this.dominoes = []
         this.root = null
         this.players = players
+
+
+        if(hands === undefined)this.distribute()
+        
+        else{
+            for (let i = 0; i < players.length; i++) {
+                
+                for(let domino of hands[i]) 
+                    players[i].hand.add(new Domino(Number(domino[0]), Number(domino[1])))
+                
+            }
+            this.pile = new Pile([])
+
+            for(let domino of pile) this.pile.add(new Domino(Number(domino[0]), Number(domino[1])))
+        }
+
+        this.player = this.start()
+
+    }
+
+    distribute(){
+
+        this.dominoes = []
 
         for(let i=0; i<7; i++){
 
@@ -13,14 +36,6 @@ class Game{
                 this.dominoes.push(new Domino(i,j))
 
         }
-
-        this.distribute()
-        
-        this.player = this.start()
-
-    }
-
-    distribute(){
 
 
         var copy = this.dominoes
