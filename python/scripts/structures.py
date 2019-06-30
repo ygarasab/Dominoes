@@ -22,8 +22,6 @@ class Hand:
             print(domino)
             domino = domino.next
 
-        return 1
-
     def check(self, value):
 
         domino = self.root
