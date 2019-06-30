@@ -10,8 +10,6 @@ class GraphicDomino{
 
         this.img = document.createElement('img')
         this.img.src = '/sprites/'+value+'.png'
-
-        console.log(match);
         
 
         if(parent){
@@ -24,7 +22,7 @@ class GraphicDomino{
                 else this.heading = direction
 
                 this.horizontal = parent.horizontal
-                this.rotation = match * direction * parent.rotation
+                this.rotation = match * this.heading * Math.abs(parent.rotation)
                 
                 if(!parent.horizontal){
                     this.top = parent.top + this.heading * 135
@@ -52,7 +50,9 @@ class GraphicDomino{
                     this.left = parent.left + parent.heading * 100
                 }
 
-                this.rotation = parent.rotation + rotation * 90
+                this.rotation = -match * parent.rotation + rotation * 90
+
+                if(this.heading * rotation > 0) this.rotation = -this.rotation
 
             }
 
@@ -90,9 +90,6 @@ class GraphicDomino{
     }
 
     display(){
-
-        console.log(this);
-        
 
         var s = this.img.style
         s.position = 'absolute'
@@ -167,11 +164,14 @@ class Chain{
         parent.next = domino
         this.tail = domino
 
+
         this.iTail = {
             horizontal : domino.horizontal,
             heading : domino.heading,
             edge : domino.edge
         }
+
+        if(domino.left > document.body.offsetWidth - 140) this.upshift()
         
 
     }
@@ -184,7 +184,7 @@ class Chain{
 
     addHead(value, rotation, match){
 
-        console.log(this.head, value, rotation, match);
+
 
         var parent = this.head
 
@@ -192,6 +192,11 @@ class Chain{
 
         domino.next = parent
         this.head = domino
+
+        console.log(domino.left);
+        
+
+        if(domino.left <100) this.shift()
 
         this.iHead = {
             horizontal : domino.horizontal,
@@ -203,15 +208,31 @@ class Chain{
 
     shift(){
 
+        console.log('shiftting');
+        
+
         var domino = this.head
 
         while(domino){
-            console.log(domino)
             domino.left += 120
-            var l = parseInt(domino.style.left.slice(0,-2)) + 120
-            domino.style.left = l+'px'
+            var l = parseInt(domino.img.style.left.slice(0,-2)) + 120
+            domino.img.style.left = l+'px'
             domino = domino.next
         }
+
+        this.iHead.edge[0][1] += 120
+        this.iHead.edge[1][1] += 120
+        this.iTail.edge[0][1] += 120
+        this.iTail.edge[1][1] += 120
+
+    }
+
+    upshift(){
+
+        console.log('shiftting');
+        
+
+        document.body.style.width = document.body.offsetWidth +200 + 'px'
 
     }
 

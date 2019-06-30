@@ -43,7 +43,8 @@ class Controller{
                 
             }
 
-            console.log([sala,hands, pile]);
+            console.log('[ CTRL ]  Emitindo status inicial das estruturas');
+            
             
 
             setTimeout(() => socket.emit('start', [sala.nome, hands, pile]), 500)
@@ -68,7 +69,7 @@ class Controller{
 
         event.preventDefault()
 
-        if (this.game.player == this.me || 1){
+        if (this.game.player == this.me){
 
             var value = event.dataTransfer.getData('text')
 
@@ -79,6 +80,7 @@ class Controller{
 
             rotation = this.placeCheck(this.chain.iHead, event.clientX, event.clientY)
             if(rotation !== null) {
+                
 
                 match = this.game.table.head == sides[0] ? -1 : 1
 
@@ -87,7 +89,11 @@ class Controller{
 
                 if(play){
 
+                    console.log('[ CTRL ]  Emitindo jogada');
+                    
+
                     this.socket.emit('play', [this.socket.sala.nome,{
+                        tag : 'play',
                         player : this.id,
                         ponta : 0,
                         valor : value,
@@ -95,12 +101,15 @@ class Controller{
                         match : match
                     }])
 
+                    this.board.removeFromHand(value)
+
                     return this.chain.addHead(value, rotation, match)
                 }
             }
 
             rotation = this.placeCheck(this.chain.iTail, event.clientX, event.clientY)
             if(rotation !== null) {
+                
 
                 match = this.game.table.tail == sides[0] ? -1 : 1
                 
@@ -108,21 +117,25 @@ class Controller{
 
                 if(play){
 
-                    console.log(this.socket.sala);
+                    console.log('[ CTRL ]  Emitindo jogada');
+                    
                     
                     this.socket.emit('play', [this.socket.sala.nome,{
+                        tag : 'play',
                         player : this.id,
                         ponta : 1,
                         valor : value,
                         rotation : rotation,
                         match : match
                     }])
+
+                    this.board.removeFromHand(value)
                     return this.chain.addTail(value, rotation, match)
                 }
             }
         }
 
-        else console.log("Não é sua vez");
+        else console.log("No momento, é a vez de "+ this.game.player.nome);
         
 
     }
@@ -164,6 +177,26 @@ class Controller{
             else return null
 
         }
+
+    }
+
+    buy(){
+
+        if (this.game.player == this.me){
+
+            let domino = this.game.buy()
+
+            this.board.addToHand(domino.value)
+
+            this.socket.emit('play', [this.socket.sala.nome,{
+                tag : 'buy',
+                player : this.id,
+            }])
+
+        }
+
+        else console.log('Não é sua vez');
+        
 
     }
 

@@ -11,6 +11,8 @@ class HandDomino{
 
         this.draggin = false
 
+        this.value = bone
+
         this.img = document.createElement('img')
         this.img.className = 'hand-bone'
         this.img.id = bone
@@ -84,7 +86,6 @@ class Board{
 
     display(){
         
-        document.body.innerHTML = ''
 
         document.body.appendChild(this.hand)
 
@@ -101,6 +102,22 @@ class Board{
         this.bone_set.push(handbone)
 
         this.bones.style.width = 70*this.bone_set.length+'px'
+
+    }
+
+    removeFromHand(value){
+
+        var new_set = []
+
+        for(let bone of this.bone_set){
+
+            if(bone.value == value) this.bones.removeChild(bone.img)
+            
+            else new_set.push(bone)
+
+        }
+
+        this.bone_set = new_set
 
     }
 

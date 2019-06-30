@@ -1,5 +1,12 @@
 class Game{
 
+    /**
+     * 
+     * @param {Player[]} players 
+     * @param {String[][]} hands 
+     * @param {String[]} pile 
+     */
+
     constructor(players, hands, pile){
 
         this.dominoes = []
@@ -18,7 +25,7 @@ class Game{
             }
             this.pile = new Pile([])
 
-            for(let domino of pile) this.pile.add(new Domino(Number(domino[0]), Number(domino[1])))
+            for(let domino of pile.reverse()) this.pile.add(new Domino(Number(domino[0]), Number(domino[1])))
         }
 
         this.player = this.start()
@@ -106,17 +113,20 @@ class Game{
 
 
             if (place && this.table.add_tail(domino) || ! place && this.table.add_head(domino)){
-            
-                console.log(domino);
 
                 if (this.player.hand.isEmpty()) return 2
 
                 this.player = this.player.next
+                console.log("[ GAME ]  Agora é a vez de "+this.player.nome);
+                
                 return 1
         
             }
 
             else{
+
+                console.log('jogada impossível');
+                
 
                 this.player.hand.add(domino)
                 return 0
@@ -136,6 +146,6 @@ class Game{
             this.player.hand.add(domino)
 
         }
-        return 0
+        return domino
     }
 }   

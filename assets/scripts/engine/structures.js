@@ -121,6 +121,11 @@ class Hand{
 
 class Pile{
 
+    /**
+     * 
+     * @param {Domino[]} set 
+     */
+
     constructor(set){
 
         this.top = null
@@ -128,6 +133,11 @@ class Pile{
         for(let domino of set) this.add(domino)
 
     }
+
+    /**
+     * 
+     * @param {Domino} domino 
+     */
 
     add(domino){
 
@@ -141,6 +151,9 @@ class Pile{
     
 
     }
+    /**
+     * @returns {Domino}
+     */
     take(){
 
         if(! this.top) return 0
@@ -152,6 +165,10 @@ class Pile{
         return domino
 
     }
+
+    /**
+     * @returns {String[]}
+     */
 
     toArray(){
         var array = []

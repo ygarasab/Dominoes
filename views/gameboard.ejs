@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ondragover="event.preventDefault()">
+<html ondragover="event.preventDefault()" style="padding-right: 100px">
     <head>
         <meta charset="utf-8">
         <title>Bord</title>
@@ -14,6 +14,8 @@
     <script src="/scripts/board.js"></script>
     <script src="/scripts/controller.js"></script>
     <body >
+
+        <button id="comprar" onclick="comprar()">Comprar</button>
                 
     </body>
 
@@ -26,13 +28,24 @@
 
         var owner = 0
 
+        var players = []
+
         var socket = io.connect()
 
         var game
 
+        function comprar(){
+
+            game.buy()
+
+        }
+
         function start() {
 
-            var players = []
+            console.log("[ MAIN ]  Iniciando jogo como dono da sala");
+            
+
+            
 
             for(let player of sala.membros) 
                 players.push(new Player(player, sala.membros.indexOf(player)))
@@ -45,6 +58,9 @@
 
         .on('info', (info) => {
 
+            console.log('[ MAIN ]  Recebendo informações da sala');
+            
+
             owner = 1
             sala = info
             socket.sala = sala
@@ -53,17 +69,17 @@
         })
 
         .on('start', (info) => {
-
-            console.log(owner);
             
 
             if(!owner){
+
+                console.log('[ MAIN ]  Iniciando jogo como membro');
+                
 
                 sala = info[0]
                 let hands = info[1]
                 let pile = info[2]
 
-                var players = []
 
                 for(let player of sala.membros) 
                     players.push(new Player(player, sala.membros.indexOf(player)))
@@ -80,17 +96,52 @@
         .on('status', (sala)=>{
 
             if(sala.gamestate!=undefined && sala.gamestate.length > gamestate.length){
+                
+                console.log('[ MAIN ]  Atualizando status do jogo');
+                
+                
                 let play = sala.gamestate[gamestate.length]
                 gamestate = sala.gamestate
+                
+                
+
+                if(players[play.player].nome != username){
+
+                    console.log(`[ MAIN ]  Player ${username} salvando jogada feita por ${players[play.player].nome}`);
+
+                    switch(play.tag){
+
+                        case 'buy':
+
+                            let domino = game.game.buy()
+
+                            console.log(play.player+' comprou '+domino.value);
+
+                            console.log("Mãod de "+game.game.player.nome+' : '+game.game.player.hand.toArray());
+                            
+                            
+
+                            break
 
 
-                game.game.play(play.valor, play.ponta)
-                
-                if(!play.ponta) 
-                    game.chain.addHead(play.valor, play.rotation, play.match)
-                else 
-                    game.chain.addTail(play.valor, play.rotation, play.match)
-                
+
+                        case 'play':
+
+                            console.log(game.game.player.nome);
+
+                            game.game.play(play.valor, play.ponta)
+
+                            console.log(game.game.player.nome);
+                            
+                            
+                            if(!play.ponta) 
+                                game.chain.addHead(play.valor, play.rotation, play.match)
+                            else 
+                                game.chain.addTail(play.valor, play.rotation, play.match)
+                            break
+                        
+                    }
+                } 
             };
             
 

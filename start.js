@@ -163,8 +163,6 @@ var io = socket(server)
         })
 
         .on('play', (data) => {
-
-            console.log(data[0]);
             
 
             var sala = salas.filter((value) => {return value.nome == data[0]})[0]
