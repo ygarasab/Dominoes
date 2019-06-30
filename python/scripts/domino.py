@@ -1,12 +1,6 @@
 class Domino:
 
-    def __init__(self, a, b):
-
-        """
-        Estrutura básica de manipulação
-        :param int a:
-        :param int b:
-        """
+    def __init__(self, a : int, b : int):
 
         self.sides = [a, b]
 
