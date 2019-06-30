@@ -1,4 +1,4 @@
-# Dominoes 
+# Dominoes - Estruturas
 #### versão python
 
 ## Sobre
