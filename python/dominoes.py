@@ -1,7 +1,9 @@
-from scripts.game import Game
-from scripts.player import Player
+from game.game import Game
+from nodes.player import Player
 
 class App:
+
+    #Aplicação do jogo de dominó
 
     def __init__(self):
 
@@ -24,6 +26,8 @@ class App:
         print(self.game.player.nome,"bateu\n#######################################\n!")
 
     def menu(self):
+
+        #Menu inicial da aplicação
 
         print("\n###########################################")
         print("                 DOMINOES              ")
@@ -69,6 +73,8 @@ class App:
 
     def listen(self):
 
+        #Terminal de comandos
+
         command = input("\n< ").split()
 
         if command and command[0] in self.dict:
@@ -94,6 +100,8 @@ class App:
         return 1
 
     def play(self, *args):
+
+        #Tratador de comandos de jogada
 
         if args:
 
@@ -140,6 +148,8 @@ class App:
 
     def passs(self, *args):
 
+        #Tratador de comandos de pass
+
         print("\nVocê passou a vez!")
 
         self.game.player = self.game.player.next
@@ -150,6 +160,8 @@ class App:
 
 
     def buy(self, *args):
+
+        #Tratador de comandos de compra
 
         compra = self.game.buy()
 

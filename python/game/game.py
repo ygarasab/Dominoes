@@ -1,20 +1,17 @@
-from scripts.domino import Domino
+from nodes.domino import Domino
+from structures.pile import Pile
+from structures.table import  Table
+
 from random import choice
-from scripts.structures import Pile, Table
+
 
 class Game:
 
-    """
-        Estrutura básica do jogo de Dominó
-    """
+    
+    #Estrutura básica do jogo de Dominó
+    
 
-    def __init__(self, players):
-
-        """
-        Inicialização dos players e suas peças
-
-        :param list players:
-        """
+    def __init__(self, players : list):
 
         self.dominoes = []
         self.players = players
@@ -36,9 +33,8 @@ class Game:
 
     def distribute(self):
 
-        """
-        Distribui os dominós entre os players
-        """
+        #Distribui os dominós entre os players
+        
 
         copy = self.dominoes[:]
 
@@ -63,9 +59,8 @@ class Game:
 
     def start(self):
 
-        """
-        Seleciona o player com o maior 'carrão' para começar
-        """
+        #Seleciona o player com o maior 'carrão' para começar
+        
 
         for i in range(0,7)[::-1]:
 
@@ -80,14 +75,10 @@ class Game:
                     self.table = Table(domino)
                     return player.next
 
-    def play(self, domino, place):
+    def play(self, domino : str, place : str):
 
-        """
-        Realiza (ou tenta realizar) uma jogada
-        :param str domino:
-        :param str place:
+        #Realiza (ou tenta realizar) uma jogada
         
-        """
 
         if self.player.hand.check(domino):
 
@@ -110,6 +101,8 @@ class Game:
 
     def buy(self):
 
+        #Permite que o jogador compre um dominó da pilha, caso haja
+
         domino = self.pile.take()
 
         if domino:
@@ -118,8 +111,4 @@ class Game:
             return domino
 
         return 0
-
-
-x = Game([])
-k =x.play('sw','fddf')
 
