@@ -15,7 +15,7 @@ Todas essas estruturas se baseiam na disposição de uma única estrutura básic
 
 ## O Dominó
 
-A classe [Domino](python/nodes/domino.py) precisa de dois argumentos para ser construída: "a" e "b". Sendo que cada um representa um lado do dominó. E tem como atributos:
+A classe [Domino](nodes/domino.py) precisa de dois argumentos para ser construída: "a" e "b". Sendo que cada um representa um lado do dominó. E tem como atributos:
 
 - sides : Um vetor de inteiros, que vai conter a e b
 - prev : Uma referência ao dominó anterior a ele na estrutura (iniciado como None)
@@ -28,7 +28,7 @@ Com essa estrutura básica, vamos poder construir todas as demais
 
 ## A Mão do Jogador
 
-A mão de cada jogador, representada aqui pela class [Hand](python/structures/hand.py), é uma lista encadeada que vai conter os dominós que esse jogador possui. Essa classe é inicializada sem qualquer argumento, de modo que os dominós são inseridos em um outro momento.
+A mão de cada jogador, representada aqui pela class [Hand](structures/hand.py), é uma lista encadeada que vai conter os dominós que esse jogador possui. Essa classe é inicializada sem qualquer argumento, de modo que os dominós são inseridos em um outro momento.
 
 Essa classe conta com apenas um atributo : root, que contém o dominó raiz da nossa estrutura. 
 
@@ -57,7 +57,7 @@ Verifica se a mão do jogador está vazio ou não.
 
 ## A Pilha de Compra
 
-A pilha de compra, representada pela classe [Pile](python/structures/pile.py), vai conter os dominós que podem ser comprados pelos jogadores ao longo do jogo, sendo que o jogador, obrigatoriamente, deve pegar o dominó do topo.
+A pilha de compra, representada pela classe [Pile](structures/pile.py), vai conter os dominós que podem ser comprados pelos jogadores ao longo do jogo, sendo que o jogador, obrigatoriamente, deve pegar o dominó do topo.
 
 A estrutura é , sem surpresas, uma pilha, tendo como único atributo um "top", a classe toma como argumento de construção uma lista de dominós, que são adicionados dentro mesmo do construtor, por meio do método add, que veremos a seguir.
 
@@ -73,7 +73,7 @@ Funcção utilizada na hora da compra, retorna o dominó do topo, retirando este
 
 ## As Peças da Mesa
 
-O conjunto de peças dispostas na mesa, representadas aqui pelas classe [Table](python/structures/table.py), consiste nos dominós que os jogadores põe na mesa em suas jogadas, dispostas daquela maneira específica, onde um lado com três bolinhas se enconsta num lado com três bolinhas, por exemplo. É a mesa de jogo realmente.
+O conjunto de peças dispostas na mesa, representadas aqui pelas classe [Table](structures/table.py), consiste nos dominós que os jogadores põe na mesa em suas jogadas, dispostas daquela maneira específica, onde um lado com três bolinhas se enconsta num lado com três bolinhas, por exemplo. É a mesa de jogo realmente.
 
 A estrutura é basicamente uma lista duplamente encadeada, cujo constutor toma como argumento um dominó, que vai iniciar a seuqencia de dominós na mesa. A classe Table conta com quatro atributos :
 
