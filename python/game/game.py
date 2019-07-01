@@ -75,7 +75,7 @@ class Game:
                     self.table = Table(domino)
                     return player.next
 
-    def play(self, domino : str, place : str):
+    def play(self, domino : str, place : bool):
 
         #Realiza (ou tenta realizar) uma jogada
         
