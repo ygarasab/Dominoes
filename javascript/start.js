@@ -3,32 +3,57 @@ const socket = require('socket.io')
 const bodyParser = require('body-parser')
 var session = require('express-session');
 
-const port = process.env.PORT || 5000
+class Server{
 
-urlParser = bodyParser.urlencoded({extended:false})
+    constructor(){
 
-var players = []
-var salas = []
+        this.port = process.env.PORT || 5000
 
-app = express()
+        this.urlParser = bodyParser.urlencoded({extended:false})
 
-    .use(express.static('assets'))
+        this.players = []
+        this.salas = []
 
-    .use(session({secret:'XASDASDA'}))
+        this.app = express()
 
-    .set('view engine', 'ejs')
+            .use(express.static('assets'))
 
-    .get('/', (req,res) => {
+            .use(session({secret:'XASDASDA'}))
+
+            .set('view engine', 'ejs')
+
+            .get('/', (req, res) => this.getIndex(req, res))
+
+            .get('/username', (req, res) => this.getUsername(req, res))
+
+            .post('/username', this.urlParser, (req, res) => this.postUsername(req, res))
+
+            .get('/lobby/:nome', (req, res) => this.getLobby(req, res))
+
+            .get('/game/:nome', (req, res) => this.getGame(req, res))
+
+            .get('/salas', (req, res) => this.getSalas(req, res))
         
+        
+        this.server = this.app.listen(this.port, () => console.log(`[ node ]  Ouvindo à porta ${ this.port }`))
+        
+        this.io = socket(this.server).on('connection', (socket) => this.ioConnect(socket))
+
+        this.loop = setInterval(() => this.updateLoop() , 500)
+
+    }
+
+    getIndex(req, res){
+
         let username = req.session.username
 
         if(!username) res.redirect('/username')
 
         else res.render('index', req.session)
 
-    })
+    }
 
-    .get('/username', (req, res) => {
+    getUsername(req,res){
 
         let username = req.session.username
 
@@ -36,31 +61,31 @@ app = express()
 
         else res.render('username')
 
-    })
+    }
 
-    .post('/username', urlParser, (req, res) => {
-        
-        
+    postUsername(req,res){
+
         let username = req.body.username
+        
 
-        if(players.includes(username)) res.redirect('/username')
+        if(this.players.includes(username)) res.redirect('/username')
 
         else{
 
             req.session.username = username
 
-            players.push(username)
+            this.players.push(username)
 
 
             console.log(`[ node ]  Novo login de ${ username }`)
-            console.log(`[ node ]  Players no servidor : ${ players }`)
+            console.log(`[ node ]  Players no servidor : ${ this.players }`)
 
             res.redirect('/')     
         }   
 
-    })
+    }
 
-    .get('/lobby/:nome', (req, res) => {
+    getLobby(req, res){
 
         let username = req.session.username
 
@@ -68,19 +93,19 @@ app = express()
 
         else res.render('lobby', {username : username, sala : req.params.nome})
 
-    })
+    }
 
-    .get('/game/:nome', (req, res) => {
-
+    getGame(req, res){
+        
         let username = req.session.username
 
         if(!username) res.redirect('/username')
 
         else res.render('gameboard', {username : username, sala : req.params.nome})
 
-    })
+    }
 
-    .get('/salas', (req,res) => {
+    getSalas(req, res){
 
         let username = req.session.username
 
@@ -88,96 +113,101 @@ app = express()
 
         else res.render('salas', {salas : salas})
 
-    })
+    }
 
-server = app.listen(port, () => console.log(`[ node ]  Ouvindo à porta ${ port }`))
-
-var io = socket(server)
-
-
-    .on('connection', (socket) => {
+    ioConnect(socket){
 
         socket
 
-        .on('sala', (data) => {
+            .on('sala', (arg) => this.salaCallback(arg, socket))
 
-            var sala = data.sala
-            let nome = data.nome
+            .on('looking', () => socket.join('salas'))
 
-            sala = {nome : sala, dono : nome, membros : [nome], ingame : false}
+            .on('go', (arg) => this.goCallback(arg, socket))
 
-            
+            .on('info', (arg) => this.infoCallback(arg, socket))
 
-            if(!salas.filter((value) => {return value.nome == sala.nome}).length){
-                salas.push(sala)
-                console.log('[ sock ]  Nova sala registrada por '+ nome);
-            }
+            .on('start', (arg) => this.startCallback(arg, socket))
 
-            sala = salas.filter((value) => {return value.nome == sala.nome})[0]
-            socket.join(sala.nome)
-            
-            if(!sala.membros.includes(nome)) sala.membros.push(nome)
+            .on('play', (arg) => this.playCallback(arg, socket))
 
-            if(sala.dono == nome) socket.emit('dono')
+    }
 
-
-
-        })
-
-        .on('looking', () => {
-
-            socket.join('salas')
-
-        })
-
-        .on('go', (nome) => {
-
-            var sala = salas.filter((value) => {return value.nome == nome})[0]
-            sala.ingame = true
-
-            io.to(nome).emit('go', nome)
+    salaCallback(data, socket){
         
-        })
+        var sala = data.sala
+        let nome = data.nome
 
-        .on('info', (data) => {
+        sala = {nome : sala, dono : nome, membros : [nome], ingame : false}
 
-            var sala = salas.filter((value) => {return value.nome == data[0]})[0]
-            console.log(data[1]+" pedindo informação");
 
-            socket.join(data[0])
+        if(!this.salas.filter((value) => {return value.nome == sala.nome}).length){
+            this.salas.push(sala)
+            console.log('[ sock ]  Nova sala registrada por '+ nome);
+        }
 
-            console.log(data[1]+' está em '+socket.rooms);
+        sala = this.salas.filter((value) => {return value.nome == sala.nome})[0]
+        socket.join(sala.nome)
+        
+        if(!sala.membros.includes(nome)) sala.membros.push(nome)
+
+        if(sala.dono == nome) socket.emit('dono')
+    }
+
+    goCallback(nome, socket){
+
+        var sala = this.salas.filter((value) => {return value.nome == nome})[0]
+        sala.ingame = true
+
+        this.io.to(nome).emit('go', nome)
+
+    }
+
+    infoCallback(data, socket){
+
+        var sala = this.salas.filter((value) => {return value.nome == data[0]})[0]
+        console.log(data[1]+" pedindo informação");
+
+        socket.join(data[0])
+
+        console.log(data[1]+' está em '+socket.rooms);
+        
+        
+        if(sala.dono == data[1]) socket.emit('info', sala)
+
+    }
+
+    startCallback(data, socket){
+
+        console.log('starting', data);
             
-            
-            if(sala.dono == data[1]) socket.emit('info', sala)
+        var sala = this.salas.filter((value) => {return value.nome == data[0]})[0]
+        sala.gamestate = [0]
+        this.io.to(data[0]).emit('start', [sala,data[1], data[2]] )
 
-        })
+    }
 
-        .on('start', (data) => {
-            console.log('starting', data);
-            
-            var sala = salas.filter((value) => {return value.nome == data[0]})[0]
-            sala.gamestate = [0]
-            io.to(data[0]).emit('start', [sala,data[1], data[2]] )
+    playCallback(data, socket){
 
-        })
+        var sala = this.salas.filter((value) => {return value.nome == data[0]})[0]
 
-        .on('play', (data) => {
-            
+        let play = data[1]
+        sala.gamestate.push(play)
 
-            var sala = salas.filter((value) => {return value.nome == data[0]})[0]
+        console.log(play.player+" acabou de jogar");
 
-            let play = data[1]
-            sala.gamestate.push(play)
+    }
 
-            console.log(play.player+" acabou de jogar");
-            
+    updateLoop(){
+        
+        this.io.to('salas').emit('salas', this.salas)
+        for(let sala of this.salas) this.io.to(sala.nome).emit('status', sala)
 
-        })
+    }
+    
 
-    })
 
-setInterval(()=>{
-    io.to('salas').emit('salas', salas)
-    for(let sala of salas) io.to(sala.nome).emit('status', sala)
-}, 1000)
+}
+
+
+new Server()
