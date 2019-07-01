@@ -55,7 +55,7 @@ Parecido o método check, get vai buscar pelo dominó desejado na estrutura, só
 Verifica se a mão do jogador está vazio ou não.
 
 
-## A pilha de compra
+## A Pilha de Compra
 
 A pilha de compra, representada pela classe [Pile](https://github.com/Tubskleyson/Dominoes/blob/78b8721c39c53c0690bd7d9fd62ea148585baf5e/python/scripts/structures.py#L66-L91), vai conter os dominós que podem ser comprados pelos jogadores ao longo do jogo, sendo que o jogador, obrigatoriamente, deve pegar o dominó do topo.
 
@@ -71,8 +71,27 @@ Insere um dominó na estrutura. Se este for o primeiro nó, ele é atribuido ao 
 
 Funcção utilizada na hora da compra, retorna o dominó do topo, retirando este da pilha e transformando seu sucessor no topo da pilha. Caso não haja topo (pilha vazia), o método retorna 0.
 
+## As Peças da Mesa
 
+O conjunto de peças dispostas na mesa, representadas aqui pelas classe [Table](https://github.com/Tubskleyson/Dominoes/blob/41684f263ac9e690f4cf2c3945bf189a8bc34c48/python/scripts/structures.py#L93-L154), consiste nos dominós que os jogadores põe na mesa em suas jogadas, dispostas daquela maneira específica, onde um lado com três bolinhas se enconsta num lado com três bolinhas, por exemplo. É a mesa de jogo realmente.
 
+A estrutura é basicamente uma lista duplamente encadeada, cujo constutor toma como argumento um dominó, que vai iniciar a seuqencia de dominós na mesa. A classe Table conta com quatro atributos :
 
+- first : o primeiro dominó da sequência
+- last : o último dominó da sequencia
+- head : O número que fica na cabeça da lista, ou seja, o lado do primeiro dominó que não está em contato com outro dominó, portanto, disponível.
+- tail : Segue o mesmo conceito de head, mas se baseando no final da lista, no último dominó
 
+Além disso, a classe conta também com os seguintes métodos :
 
+#### add_head( domino : Domino ) => boolean
+
+Insere um dominó no início da sequência da mesa, verificando antes se o dominó encaixa. Se o dominó encaixa, a peça é adicionada e o método retorna 1, se não, o método simplesmente retorna 0. A verificação é feita checando se algum dos lados do dominó a ser inserido tem valor igual ao atributo head do objeto, e a adição é feita transformando o first do objeto no next do cominó inserido, e o dominó inserido no prev do first do objeto, estabelecendo uma relação entre os dominós. Por fim, o dominó inserido é tomado como first do objeto, e seu lado não encaixado passa a ser o atributo head.
+
+#### add_tail( domino : Domino ) => boolean
+
+Insere um dominó no fim da sequência da mesa, seguindo o mesmo ritual do método descrito acima, só que manipulando os atributos last e tail do objeto, é claro.
+
+#### display( ) => void
+
+Exibe as peças da mesa
