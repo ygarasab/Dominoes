@@ -1,4 +1,4 @@
-class Controller{
+class gameController{
 
     /**
      * 
@@ -46,8 +46,7 @@ class Controller{
             console.log('[ CTRL ]  Emitindo status inicial das estruturas');
             
             
-
-            setTimeout(() => socket.emit('start', [sala.nome, hands, pile]), 500)
+            setTimeout(() => socket.emit('start', [this.socket.sala, hands, pile]), 500)
         }
 
         else this.game = new Game(players, hands, pile)
@@ -92,7 +91,7 @@ class Controller{
                     console.log('[ CTRL ]  Emitindo jogada');
                     
 
-                    this.socket.emit('play', [this.socket.sala.nome,{
+                    this.socket.emit('play', [this.socket.sala,{
                         tag : 'play',
                         player : this.id,
                         ponta : 0,
@@ -120,7 +119,7 @@ class Controller{
                     console.log('[ CTRL ]  Emitindo jogada');
                     
                     
-                    this.socket.emit('play', [this.socket.sala.nome,{
+                    this.socket.emit('play', [this.socket.sala,{
                         tag : 'play',
                         player : this.id,
                         ponta : 1,
@@ -188,7 +187,7 @@ class Controller{
 
             this.board.addToHand(domino.value)
 
-            this.socket.emit('play', [this.socket.sala.nome,{
+            this.socket.emit('play', [this.socket.sala,{
                 tag : 'buy',
                 player : this.id,
             }])

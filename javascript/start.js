@@ -111,7 +111,7 @@ class Server{
 
         if(!username) res.redirect('/username')
 
-        else res.render('salas', {salas : salas})
+        else res.render('salas', {salas : this.salas})
 
     }
 
@@ -179,7 +179,7 @@ class Server{
 
     startCallback(data, socket){
 
-        console.log('starting', data);
+        console.log(data);
             
         var sala = this.salas.filter((value) => {return value.nome == data[0]})[0]
         sala.gamestate = [0]

@@ -16,6 +16,10 @@ class SocketController{
 
         .on('start', (info) => this.startCallback(info))
 
+        .on('status', (sala) => this.statusCallback(sala))
+
+        this.socket.emit('info', [sala, username])
+
     }
 
     start(){
@@ -24,8 +28,8 @@ class SocketController{
             
         for(let player of this.sala.membros) 
             this.players.push(new Player(player, this.sala.membros.indexOf(player)))
-
-        this.game = new gameController(this.socket,players, this.sala.membros.indexOf(this.username))
+        
+        this.gameController = new gameController(this.socket,this.players, this.sala.membros.indexOf(this.username))
 
     }
 
@@ -58,13 +62,58 @@ class SocketController{
                 
                 this.players.push(new Player(player, this.sala.membros.indexOf(player)))
 
-            this.socket.sala = sala
-            this.game = new gameController(this.socket,players, this.sala.membros.indexOf(this.username), hands, pile)
+            this.socket.sala = this.sala
+            this.gameController = new gameController(this.socket, this.players, this.sala.membros.indexOf(this.username), hands, pile)
 
 
 
         }
 
+
+    }
+
+    statusCallback(sala){
+
+        if(sala.gamestate!=undefined && sala.gamestate.length > this.gamestate.length){
+                
+            console.log('[ MAIN ]  Atualizando status do jogo');
+            
+            
+            let play = sala.gamestate[this.gamestate.length]
+            this.gamestate = sala.gamestate
+            
+            
+
+            if(this.players[play.player].nome != this.username){
+
+                console.log(`[ MAIN ]  Player ${this.username} salvando jogada feita por ${this.players[play.player].nome}`);
+
+                switch(play.tag){
+
+                    case 'buy':
+
+                        let domino = this.gameController.game.buy()
+
+                        break
+
+
+
+                    case 'play':
+
+                        console.log(this.gameController.game.player.nome);
+
+                        this.gameController.game.play(play.valor, play.ponta)
+                        
+                        
+                        if(!play.ponta) 
+                            this.gameController.chain.addHead(play.valor, play.rotation, play.match)
+                        else 
+                            this.gameController.chain.addTail(play.valor, play.rotation, play.match)
+                        break
+                    
+                }
+            } 
+        }
 
     }
 
