@@ -179,7 +179,6 @@ class Server{
 
     startCallback(data, socket){
 
-        console.log(data);
             
         var sala = this.salas.filter((value) => {return value.nome == data[0]})[0]
         sala.gamestate = [0]
@@ -188,6 +187,8 @@ class Server{
     }
 
     playCallback(data, socket){
+
+        console.log(data[0])
 
         var sala = this.salas.filter((value) => {return value.nome == data[0]})[0]
 
