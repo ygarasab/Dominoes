@@ -22,7 +22,6 @@ class GraphicDomino{
                 else this.heading = direction
 
                 this.horizontal = parent.horizontal
-                this.rotation = match * this.heading * Math.abs(parent.rotation)
                 
                 if(!parent.horizontal){
                     this.top = parent.top + this.heading * 135
@@ -49,21 +48,28 @@ class GraphicDomino{
                     this.top = parent.top + rotation * parent.heading * 35
                     this.left = parent.left + parent.heading * 100
                 }
-
-                this.rotation = -match * parent.rotation + rotation * 90
-
-                if(this.heading * rotation > 0) this.rotation = -this.rotation
-
             }
 
             var aux = this.heading+1
 
-            if(this.horizontal) 
+            if(this.horizontal) {
                 this.edge = [[this.top + 35, this.left + aux * 55],
                              [this.top + 105, this.left + aux * 55]]
-            else
+
+                let r = 90
+
+                this.rotation = this.heading * match > 0 ? r : -r
+                
+            }
+            else{
                 this.edge = [[this.top + aux * 35, this.left],
                              [this.top + aux * 35, this.left + 70]]
+
+                             
+                this.rotation = this.heading * match > 0 ? 180 : 0
+                
+                
+            }
 
         }
 
