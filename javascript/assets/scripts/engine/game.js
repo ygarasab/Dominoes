@@ -109,6 +109,8 @@ class Game{
         
         if (this.player.hand.check(domino)){
 
+            
+
             var domino = this.player.hand.get(domino)
 
 
@@ -126,7 +128,8 @@ class Game{
             else{
 
                 console.log('jogada impossível');
-                
+                console.log(place, this.table.head, this.table.tail);
+                                
 
                 this.player.hand.add(domino)
                 return 0

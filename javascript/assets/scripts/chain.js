@@ -8,6 +8,8 @@ class GraphicDomino{
      */
     constructor(value,parent, direction, rotation, match){
 
+        this.parent = parent
+
         this.img = document.createElement('img')
         this.img.src = '/sprites/'+value+'.png'
         
@@ -16,7 +18,7 @@ class GraphicDomino{
 
             this.horizontal = !parent.horizontal
 
-            if(!rotation){
+            if(!rotation || !parent.parent){
 
                 if(parent.heading) this.heading = parent.heading
                 else this.heading = direction
@@ -24,12 +26,12 @@ class GraphicDomino{
                 this.horizontal = parent.horizontal
                 
                 if(!parent.horizontal){
-                    this.top = parent.top + this.heading * 135
+                    this.top = parent.top + this.heading * 97
                     this.left = parent.left
                 }
                 else{
                     this.top = parent.top
-                    this.left = parent.left + this.heading * 135
+                    this.left = parent.left + this.heading * 97
                 }
             }
 
@@ -40,21 +42,21 @@ class GraphicDomino{
                 this.horizontal = !parent.horizontal
 
                 if(!parent.horizontal){
-                    this.top = parent.top + parent.heading * 35
-                    this.left = parent.left - rotation * parent.heading * 100
+                    this.top = parent.top + parent.heading * 25
+                    this.left = parent.left - rotation * parent.heading *72
                 }
                 else{
         
-                    this.top = parent.top + rotation * parent.heading * 35
-                    this.left = parent.left + parent.heading * 100
+                    this.top = parent.top + rotation * parent.heading * 25
+                    this.left = parent.left + parent.heading * 72
                 }
             }
 
             var aux = this.heading+1
 
             if(this.horizontal) {
-                this.edge = [[this.top + 35, this.left + aux * 55],
-                             [this.top + 105, this.left + aux * 55]]
+                this.edge = [[this.top + 25, this.left + aux * 40],
+                             [this.top + 75, this.left + aux * 40]]
 
                 let r = 90
 
@@ -62,8 +64,8 @@ class GraphicDomino{
                 
             }
             else{
-                this.edge = [[this.top + aux * 35, this.left],
-                             [this.top + aux * 35, this.left + 70]]
+                this.edge = [[this.top + aux * 50, this.left],
+                             [this.top + aux * 50, this.left + 50]]
 
                              
                 this.rotation = this.heading * match > 0 ? 180 : 0
@@ -79,11 +81,11 @@ class GraphicDomino{
             var wh = window.innerHeight /2
 
             this.rotation = 90
-            this.top = wh-100
-            this.left = ww-30
+            this.top = wh-75
+            this.left = ww-25
 
-            this.edge = [[[this.top + 35,this.left-35],[this.top+105,this.left-35]],
-                         [[this.top + 35,this.left+105],[this.top+105, this.left+105]]]
+            this.edge = [[[this.top + 25,this.left-25],[this.top+80,this.left-25]],
+                         [[this.top + 25,this.left+80],[this.top+80, this.left+80]]]
 
             this.horizontal = 1
 
@@ -102,7 +104,7 @@ class GraphicDomino{
         s.transform =  'rotate('+this.rotation+'deg)'
         s.top = this.top+'px'
         s.left = this.left+'px'
-        s.width = '70px'
+        s.width = '50px'
         
 
         document.body.appendChild(this.img)
@@ -177,7 +179,7 @@ class Chain{
             edge : domino.edge
         }
 
-        if(domino.left > document.body.offsetWidth - 140) this.upshift()
+        this.checkBoundries(domino)
         
 
     }
@@ -200,9 +202,7 @@ class Chain{
         this.head = domino
 
         console.log(domino.left);
-        
-
-        if(domino.left <100) this.shift()
+    
 
         this.iHead = {
             horizontal : domino.horizontal,
@@ -210,11 +210,33 @@ class Chain{
             edge : domino.edge
         }
 
+        this.checkBoundries(domino)
+
     }
 
-    shift(){
+    uppush(){
 
-        console.log('shiftting');
+        var domino = this.head
+
+        while(domino){
+            domino.top += 100
+            var l = parseInt(domino.img.style.top.slice(0,-2)) + 100
+            domino.img.style.top = l+'px'
+            domino = domino.next
+        }
+
+        
+
+        this.iHead.edge[0][0] += 100
+        this.iHead.edge[1][0] += 100
+        this.iTail.edge[0][0] += 100
+        this.iTail.edge[1][0] += 100
+
+        
+
+    }
+
+    leftpush(){
         
 
         var domino = this.head
@@ -226,6 +248,8 @@ class Chain{
             domino = domino.next
         }
 
+        
+
         this.iHead.edge[0][1] += 120
         this.iHead.edge[1][1] += 120
         this.iTail.edge[0][1] += 120
@@ -233,12 +257,26 @@ class Chain{
 
     }
 
-    upshift(){
+    rightpush(){
+        document.body.style.width = document.body.offsetWidth +120 + 'px'
 
-        console.log('shiftting');
-        
+    }
 
-        document.body.style.width = document.body.offsetWidth +200 + 'px'
+    downpush(){
+        document.body.style.height = document.body.offsetHeight +150 + 'px'
+    }
+
+    checkBoundries(domino){
+
+        if(domino.left <100) this.leftpush()
+        if(this.tail.left > document.body.offsetWidth - 120 || this.head.left > document.body.offsetWidth - 120) this.rightpush()
+
+        if(domino.left > document.body.offsetWidth - 120) this.rightpush()
+
+        if(domino.top < 100) this.uppush()
+        if(this.tail.top > document.body.offsetHeight - 200 || this.head.top > document.body.offsetHeight - 200) this.downpush()
+
+        if(domino.top > document.body.offsetHeight - 120) this.downpush()
 
     }
 

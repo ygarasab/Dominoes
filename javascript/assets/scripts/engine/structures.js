@@ -207,6 +207,8 @@ class Table{
                 domino.next = this.first
                 this.first = domino
                 this.head = domino.sides[Math.abs(domino.sides.indexOf(i)-1)]
+                console.log(`${this.head} é a nova cabeça`);
+                
                 domino.sides = [this.head, i]
                 return 1
             

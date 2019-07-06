@@ -13,6 +13,9 @@ class Graphics{
         var r 
         let e = info.edge  
 
+        console.log(JSON.stringify(e), x, y);
+        
+
         if(info.horizontal){
 
                           

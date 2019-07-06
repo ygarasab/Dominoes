@@ -112,6 +112,8 @@ class App{
 
         }
 
+        this.displayTurn()
+
     }
 
     infoCallback(info){
@@ -135,7 +137,7 @@ class App{
 
         event.preventDefault()
 
-        if(this.game.player = this.player){
+        if(this.game.player == this.player){
 
             var value = event.dataTransfer.getData('text')
 
@@ -143,7 +145,7 @@ class App{
 
             var rotation, play, match
 
-            rotation = this.graphics.placeCheck(this.graphics.chain.iHead, event.clientX, event.clientY)
+            rotation = this.graphics.placeCheck(this.graphics.chain.iHead, event.clientX + window.pageXOffset, event.clientY + window.pageYOffset)
 
             if(rotation !== null){
 
@@ -173,7 +175,7 @@ class App{
 
             }
 
-            rotation = this.graphics.placeCheck(this.graphics.chain.iTail, event.clientX, event.clientY)
+            rotation = this.graphics.placeCheck(this.graphics.chain.iTail, event.clientX + window.pageXOffset, event.clientY + window.pageYOffset)
 
             if(rotation !== null){
 
@@ -232,6 +234,12 @@ class App{
                         break
 
 
+                    case 'pass':
+
+                        this.game.player = this.game.player.next
+
+                        break
+
 
                     case 'play':
 
@@ -246,7 +254,9 @@ class App{
                         break
                     
                 }
-            } 
+            }
+
+            this.displayTurn()
         }
 
     }
@@ -267,6 +277,28 @@ class App{
         }
 
         else console.log('Não é sua vez');
+    }
+
+    pass(){
+
+        if (this.game.player == this.player){
+
+            this.game.player = this.game.player.next
+
+            this.socket.emit('play', [this.sala.nome,{
+                tag : 'pass',
+                player : this.id,
+            }])
+        }
+
+        else console.log('Não é sua vez');
+    }
+
+    displayTurn(){
+
+        if(this.game.player == this.player) document.getElementById('turn').innerHTML = 'É a sua vez!'
+
+        else document.getElementById('turn').innerHTML = 'Agora é a vez de '+this.game.player.nome
     }
 
 }
