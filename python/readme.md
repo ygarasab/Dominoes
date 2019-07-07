@@ -2,7 +2,7 @@
 
 ## Sobre
 
-Esta é uma aplicação python que simula um clássico jogo de dominó. O projeto em si tem como fim trabalhar com estruturas de dados; caso você esteja interessado nessas estruturas, aqui está a [documentação](structures.md). 
+Esta é uma aplicação python que simula um clássico jogo de dominó. O projeto em si tem como fim trabalhar com estruturas de dados; caso você esteja interessado nessas estruturas, aqui está a [documentação](estruturas.md). 
 
 A aplicação conta com uma engine genérica, construída na class [Game](game/game.py), que faz uso das estrutras criadas para simular o fluxo de um jogo de dominó e duas ações. Essa classe é realmente bem genérica, báscia, tanto que foi traduzida e usada no projeto [Node](../javascript/) deste repositótio, funcionando de maneira bem eficiente. 
 
