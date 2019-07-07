@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html ondragover="event.preventDefault()" style="padding-right: 100px">
+    <head>
+        <meta charset="utf-8">
+        <title><%= sala %></title>
+        <link rel="stylesheet" href="/estilo/board.css">
+    </head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+    <script src="/scripts/engine/domino.js"></script>
+    <script src="/scripts/engine/player.js"></script>
+    <script src="/scripts/engine/game.js"></script>
+    <script src="/scripts/engine/structures.js"></script>
+    <script src="/scripts/graphics/chain.js"></script>
+    <script src="/scripts/graphics/board.js"></script>
+    <script src="/scripts/app.js"></script>
+    <body >
+
+        <button id="comprar" onclick="app.buy()">Comprar</button>
+        <span id="turn">Iniciando o jogo</span>
+        <button id="pass" onclick="app.pass()">Passar</button>
+                
+    </body>
+
+    <script>
+
+        var username = '<%= username %>'
+        var sala = '<%= sala %>'
+
+        var app = new App(username, sala)
+        
+        //var players = [dudu, dede]
+
+        //var game = new Controller(players, id)
+    </script>
+</html>
