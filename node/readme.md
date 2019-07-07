@@ -43,11 +43,35 @@ Esta classe conta com os seguintes atributos:
   - id : inteiro que contém a posição do jogador local no array players
   - game : instância da classe [Game](assets/scripts/engine/game.js) que serve de estrutura básica para o jogo
   
-  - board : instância da classe [Board](assets/scripts/board.js) que faz a representação gráfica da mão do jogador
-  - chain : instância da classe [Chain](assets/scripts/chain.js) que faz a representação gráfica da corrente de dominós na mesa.
+  - board : instância da classe [Board](assets/scripts/graphics/board.js) que faz a representação gráfica da mão do jogador
+  - chain : instância da classe [Chain](assets/scripts/graphics/chain.js) que faz a representação gráfica da corrente de dominós na mesa.
   
 Os métodos da class App são uma mistura de ações gráficas, listeners e emissões de sockets. Tudo integrado de forma que a comunicação entre o comando que vem via socket possa ser traduzida facilmente para um evento do jogo. 
 
 Mais informações sobre os métodos podem ser obtidas na documentação do próprio código.
 
-###
+### Board
+
+A classe [Board](assets/scripts/graphics/board.js) faz referência à interpretação gráfica da mão do usuário. Ela gera um containner fixo na borda da tela que comporta os dominós que o jogador tem disponíveis. Esta classe possui apenas dois métodos : um para adicionar um dominó à mão do jogador, e outro para remover, sendo que o objeto já é iniciado tomando o conjunto de dominós iniciais do jogador como parâmetro.
+
+Cada dominó desses é representado em código por uma instância da class HandDomino, que é usada exclusivamente pela classe Board e não possui quaisquer atributos ou métodos especiais. 
+
+
+### Chain
+
+A classe [Chain](assets/scripts/graphics/chain.js) faz referência à interpretação gráfica da corrente de dominós que é apresentada na mesa, sendo que, a cada momento do jogo, essa corrente deve ser a mesma para todos os jogadores. Essa classe é iniciada tomando uma string "root" como argumento, que vai informar qual o primeiro dominó posto na mesa. A classe possui dois métodos essenciais de inserção, um inserindo um dominó no começo e outro que insere o dominó no fim. Além desses, existem também alguns métodos acessórios, que manipulam a tela para deixar a disposição dos dominós mais agradáveis e manter a jogabilidade.
+
+No entando, vale ressaltar que a parte mais importante da corrente de dominós na mesa não está na classe Chain em si, mas sim na classe que ela manipula, a class ChainDomino. Essa classe serve para representar cada um dos dominós da mesa, e o seu construtor é o que torna possível a disposição lógica dos dominós na mesa. Por isso, é interessante analisarmos essa classe um pouco de perto.
+
+Comecemos com os argumentos do construtor:
+
+ - value : o valor do dominó a ser inserido
+ - parent : o dominó que precede este na corrente
+ - direction : indica se o dominó está sendo inserido no início ou no fim da corrente
+ - rotation : indica a rotação do dominó em relação ao dominó "parent"
+ - match : indica se o lado do dominó que será ligado à corrente é o de menor ou de maior valor
+
+ Tendo a informação da por esses argumentos, o construtor determina as características posicionais de cada dominó, como a distância em relação ao topo da tela, a distância em relação à esquerda da tela, a rotação do dominó, e a direção para onde a face livre do dominó aponta. Todas essas características são importantes tanto para a inserção do dominó em questão quanto para seus sucessores.
+
+
+ 

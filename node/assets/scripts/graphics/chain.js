@@ -1,4 +1,4 @@
-class GraphicDomino{
+class ChainDomino{
 
     /**
      * @param {String} value Valor do dominó
@@ -82,7 +82,7 @@ class GraphicDomino{
 
             this.rotation = 90
             this.top = wh-75
-            this.left = ww-25
+            this.left = ww-50
 
             this.edge = [[[this.top + 25,this.left-25],[this.top+80,this.left-25]],
                          [[this.top + 25,this.left+80],[this.top+80, this.left+80]]]
@@ -129,7 +129,7 @@ class Chain{
 
     constructor(root){
 
-        var domino = new GraphicDomino(root,0,0,0)
+        var domino = new ChainDomino(root,0,0,0)
 
         this.head = domino
         this.tail = domino
@@ -161,7 +161,7 @@ class Chain{
 
         var parent = this.tail
 
-        var domino = new GraphicDomino(value,parent,1,rotation, match)
+        var domino = new ChainDomino(value,parent,1,rotation, match)
 
         parent.next = domino
         this.tail = domino
@@ -189,7 +189,7 @@ class Chain{
 
         var parent = this.head
 
-        var domino = new GraphicDomino(value,parent,-1,rotation, match)
+        var domino = new ChainDomino(value,parent,-1,rotation, match)
 
         domino.next = parent
         this.head = domino

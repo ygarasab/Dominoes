@@ -172,8 +172,7 @@ class App{
                 
                 let message = play.player == this.id ? 'Você ganhou!' : this.players[play.player].nome + ' ganhou!'
                 alert(message)
-
-                return
+                window.location.href = '/'
             }
             
 
