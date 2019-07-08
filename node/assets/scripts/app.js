@@ -352,13 +352,18 @@ class App{
         if (this.game.player == this.player){
 
             let domino = this.game.buy()
+            
+            if(domino){
 
-            this.board.addToHand(domino.value)
+                this.board.addToHand(domino.value)
 
-            this.socket.emit('play', [this.sala.nome,{
-                tag : 'buy',
-                player : this.id,
-            }])
+                this.socket.emit('play', [this.sala.nome,{
+                    tag : 'buy',
+                    player : this.id,
+                }])
+            }
+            
+            else alert("A pilha está vazia")
 
         }
 
