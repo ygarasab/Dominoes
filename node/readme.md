@@ -4,9 +4,13 @@
 
 Como uma extensão da implementação em [Python](https://github.com/Tubskleyson/Dominoes/tree/master/python) , esta aplicação traz a mesma estrutura básica do modelo em cli com a adição de elementos gráficos e de comunicação entre jogadores de máquinas distintas. Fazendo uso de Node.js e websockets, esse ramo do projeto apresenta um pequeno servidor web para jogar dominós.
 
+Já que a base do jogo se manteve entre os dois reamos do projeto, as estruturas de dados mais importantes utilizadas aqui podem ser igualmente explicadas [aqui](../python/estruturas.md).
+
+Essa aplicação está online, e pode ser acessada [aqui](https://mydominoes.herokuapp.com/).
+
 ## O Servidor
 
-O servidor Node faz uso dos pacotes express, para a estrutura básica, e socket.io para a comunicação em tempo real entre os clientes. Os jogos de dominó se farão possívei com o uso de salas, cada sala representada no sistema por um objetos json com a seguintes estrutura:
+O servidor Node faz uso dos pacotes express, para a estrutura básica, e socket.io para a comunicação em tempo real entre os clientes. Os jogos de dominó se farão possívei com o uso de salas, cada sala representada no sistema por um objetos json com a seguinte estrutura:
 
 ```
 {
