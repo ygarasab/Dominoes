@@ -4,7 +4,7 @@
 
 Como uma extensão da implementação em [Python](https://github.com/Tubskleyson/Dominoes/tree/master/python) , esta aplicação traz a mesma estrutura básica do modelo em cli com a adição de elementos gráficos e de comunicação entre jogadores de máquinas distintas. Fazendo uso de Node.js e websockets, esse ramo do projeto apresenta um pequeno servidor web para jogar dominós.
 
-Já que a base do jogo se manteve entre os dois reamos do projeto, as estruturas de dados mais importantes utilizadas aqui podem ser igualmente explicadas [aqui](../python/estruturas.md).
+Já que a base do jogo se manteve entre os dois ramos do projeto, as estruturas de dados mais importantes utilizadas aqui podem ser igualmente explicadas [aqui](../python/estruturas.md).
 
 Essa aplicação está online, e pode ser acessada [aqui](https://mydominoes.herokuapp.com/).
 
@@ -23,7 +23,7 @@ O servidor Node faz uso dos pacotes express, para a estrutura básica, e socket.
 }
 ```
 
-Dentro do jogo, as ações de cada jogador são repassadas aos demais adicionando a jogada ao atributo gamestate da sala, que vai chegar naturalmente aos jogadores, já que a cada 0.5s o servidor faz a transmissão (via websockets) do status de cada sala para seus membros, de forma que cabe aos membros checar se a array gamestate foi alterada.
+Dentro do jogo, as ações de cada jogador são repassadas aos demais adicionando a jogada ao atributo gamestate da sala, que vai chegar naturalmente aos jogadores, já que a cada 0.5s o servidor faz a transmissão (via socket) do status de cada sala para seus membros, de forma que cabe aos membros checar se a array gamestate foi alterada.
 
 
 ## O Jogo
@@ -32,7 +32,7 @@ Como já foi dito anteriormente, a estrutura básica, o jogo de dominó em si tr
 
 ### App
 
-Primeiramente, temos a classe [App](assets/scripts/app.js), que funciona como um controlador para o fluxo do jogo, é ela que inicia a estrutura básica do dominó, verifica quem é o dono, que é só um membro, organiza a estrutura dos players, a mesa, e responde às jogadas.
+Primeiramente, temos a classe [App](assets/scripts/app.js), que funciona como um controlador para o fluxo do jogo. É ela que inicia a estrutura básica do dominó, verifica quem é o dono, que é só um membro, organiza a estrutura dos players, a mesa, e responde às jogadas.
 
 Esta classe conta com os seguintes atributos:
 
@@ -45,6 +45,7 @@ Esta classe conta com os seguintes atributos:
   
   - player : instância da classe Player que representa o jogador local
   - id : inteiro que contém a posição do jogador local no array players
+  
   - game : instância da classe [Game](assets/scripts/engine/game.js) que serve de estrutura básica para o jogo
   
   - board : instância da classe [Board](assets/scripts/graphics/board.js) que faz a representação gráfica da mão do jogador
@@ -52,11 +53,11 @@ Esta classe conta com os seguintes atributos:
   
 Os métodos da class App são uma mistura de ações gráficas, listeners e emissões de sockets. Tudo integrado de forma que a comunicação entre o comando que vem via socket possa ser traduzida facilmente para um evento do jogo. 
 
-Mais informações sobre os métodos podem ser obtidas na documentação do próprio código.
+Mais informações sobre os métodos podem ser obtidas na documentação feita no próprio código.
 
 ### Board
 
-A classe [Board](assets/scripts/graphics/board.js) faz referência à interpretação gráfica da mão do usuário. Ela gera um containner fixo na borda da tela que comporta os dominós que o jogador tem disponíveis. Esta classe possui apenas dois métodos : um para adicionar um dominó à mão do jogador, e outro para remover, sendo que o objeto já é iniciado tomando o conjunto de dominós iniciais do jogador como parâmetro.
+A classe [Board](assets/scripts/graphics/board.js) faz referência à interpretação gráfica da mão do usuário. Ela gera um container fixo na borda da tela que comporta os dominós que o jogador tem disponíveis. Esta classe possui apenas dois métodos : um para adicionar um dominó à mão do jogador, e outro para remover, sendo que o objeto já é iniciado tomando o conjunto de dominós iniciais do jogador como parâmetro.
 
 Cada dominó desses é representado em código por uma instância da class HandDomino, que é usada exclusivamente pela classe Board e não possui quaisquer atributos ou métodos especiais. 
 
@@ -65,7 +66,7 @@ Cada dominó desses é representado em código por uma instância da class HandD
 
 A classe [Chain](assets/scripts/graphics/chain.js) faz referência à interpretação gráfica da corrente de dominós que é apresentada na mesa, sendo que, a cada momento do jogo, essa corrente deve ser a mesma para todos os jogadores. Essa classe é iniciada tomando uma string "root" como argumento, que vai informar qual o primeiro dominó posto na mesa. A classe possui dois métodos essenciais de inserção, um inserindo um dominó no começo e outro que insere o dominó no fim. Além desses, existem também alguns métodos acessórios, que manipulam a tela para deixar a disposição dos dominós mais agradáveis e manter a jogabilidade.
 
-No entando, vale ressaltar que a parte mais importante da corrente de dominós na mesa não está na classe Chain em si, mas sim na classe que ela manipula, a class ChainDomino. Essa classe serve para representar cada um dos dominós da mesa, e o seu construtor é o que torna possível a disposição lógica dos dominós na mesa. Por isso, é interessante analisarmos essa classe um pouco de perto.
+No entando, vale ressaltar que a parte mais importante da corrente de dominós na mesa não está na classe Chain em si, mas sim na classe que ela manipula, a class ChainDomino. Essa classe serve para representar cada um dos dominós da mesa, e o seu construtor é o que torna possível a disposição lógica dos dominós em relação aos demais. Por isso, é interessante analisarmos essa classe um pouco de perto.
 
 Comecemos com os argumentos do construtor:
 
@@ -77,5 +78,10 @@ Comecemos com os argumentos do construtor:
 
  Tendo a informação da por esses argumentos, o construtor determina as características posicionais de cada dominó, como a distância em relação ao topo da tela, a distância em relação à esquerda da tela, a rotação do dominó, e a direção para onde a face livre do dominó aponta. Todas essas características são importantes tanto para a inserção do dominó em questão quanto para seus sucessores.
 
+## A jogada
 
- 
+Quando um jogador realiza uma jogada, ela é primeiro tratada localmente, executando quaisquer transformações necessárias. Em seguida, o conteúdo da jogada, seja ela a colocação de um dominó, uma compra, etc, é enviada para o servidor como um objeto JSON, que é adicionado à array gamestate da sala. Esse objeto contém apenas as informações necessárias para que os demais clientes consigam replicar a jogada localmente, sendo que a estrutura padrão desse objeto contém o id do jogador e um "tag" que indica que tipo de jogada ele realizou.
+
+Se o jogador tiver colocado um dominó na mesa, o número de dados enviados para o servidor aumenta, já que é preciso especificar o valor da peça que foi jogada, em que ponta ela foi jogada, qual sua rotação e que lado do dominó se conecta à corrente. Lembrando que essas informações são necessárias para que todos os jogadores que estão recebendo os dados da sala consigam replicar as ações localmente.
+
+Caso o jogador tenha comprado um dominó ou passado a vez, mais nenhuma informação além do padrão é necessária. Já que todos os jogadores tem exatamente o mesmo contexto na estrutura básica do seu jogo, tais jogadas podem ser executadas de maneira simples e não requerem informações adicionais.
